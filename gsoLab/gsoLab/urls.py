@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from gsoLab.quotations.admin import quotAdmin 
 
 urlpatterns = [
     #regular admin
-    path('quotations-admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('quotations-admin/', quotAdmin.urls),
     path('', include('quotations.urls'))
 ]
