@@ -32,11 +32,8 @@ def create(request):
                 vehiculeNumber=createform.cleaned_data["vehiculeNumber"],
                 vehiculePrice=createform.cleaned_data["vehiculePrice"],
             )
-            t.save()
-            for c in createform.cleaned_data["coverages"]:
-                t.coverages.add(c)  
-            t.save()
-
+            t.save_and_calculate(createform.cleaned_data["coverages"])
+        
             return HttpResponseRedirect("/quotation/" + str(t.id))
     else:
         createform = forms.QuotationForm()

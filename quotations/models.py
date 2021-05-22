@@ -24,8 +24,8 @@ class Quotation(models.Model):
     vehiculeModel = models.CharField(max_length=80)
     vehiculeNumber = models.CharField(max_length=30, blank=True, null=True)
     vehiculePrice = models.DecimalField(max_digits=10, decimal_places=2, default=100000, validators=[MinValueValidator(30000)])
-    quotationPrice = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    coverages = models.ManyToManyField(Coverage, null=True, blank=True)
+    quotationPrice = models.DecimalField(max_digits=10, decimal_places=2, default=0, editable=False)
+    coverages = models.ManyToManyField(Coverage, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -34,5 +34,15 @@ class Quotation(models.Model):
 
     def short_date(self, adate):
         return date(adate, "Y/n/j")
-
+    
+    def save_and_calculate(self, coverage_list):
+        result = 0.00
+        super(Quotation, self).save()
+        if self.vehiculePrice:
+            result = self.vehiculePrice * 2 / 100
+        for c in coverage_list:
+            self.coverages.add(c)
+            result += c.price
+        self.quotationPrice = result
+        super(Quotation, self).save()
 
