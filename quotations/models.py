@@ -20,8 +20,9 @@ class Coverage(models.Model):
 
 class Quotation(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer_quotations')
-    vehiculeYearMake = models.PositiveSmallIntegerField()
+    vehiculeYearMake = models.PositiveSmallIntegerField(default=2021)
     vehiculeModel = models.CharField(max_length=80)
+    vehiculeNumber = models.CharField(max_length=30, blank=True, null=True)
     vehiculePrice = models.DecimalField(max_digits=10, decimal_places=2, default=100000, validators=[MinValueValidator(30000)])
     quotationPrice = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     coverages = models.ManyToManyField(Coverage)
