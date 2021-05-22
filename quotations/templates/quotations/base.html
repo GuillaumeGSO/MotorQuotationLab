@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Motor Insurance Quotation</title>
+</head>
+
+<body>
+  <div class="sidenav">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" href="/">My Cotations</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/create">Create Quotation</a>
+      </li>
+    </ul>
+  </div>
+  
+  <div id="content" , name="content" class="main">
+    <div class="row justify-content-center">
+      <div class="col-8">
+        <h5 class="mt-2">{%block title%}{% endblock %}</h5>
+        <hr class="mt-0 mb-4">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

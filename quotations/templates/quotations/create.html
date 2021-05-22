@@ -1,0 +1,15 @@
+{% extends 'quotations/base.html' %}
+{% block title %}New quotation{% endblock %}
+{% block content %}
+<div class="form-group">
+    <form method="post" action="/create/" >
+        {{form.as_p}}
+        {% csrf_token %}
+
+        {% if quotation.quotationPrice > 0 %}
+        <p>Final price : RM {{quotation.quotationPrice}}</p>
+        {% endif %}
+        <button type="submit" class="btn btn-primary" name="save">Evaluate</button>
+    </form>
+</div>
+{% endblock %}
