@@ -2,8 +2,9 @@
 {% block title %}New quotation{% endblock %}
 {% block content %}
 <div class="form-group">
-    <form method="POST" action="create" >
+    <form method="post" action="/create/" >
         {{form.as_p}}
+        {% csrf_token %}
         <p>Final price : RM {{quotation.quotationPrice}}</p>
         <button type="submit" class="btn btn-primary" name="save">Save</button>
     </form>

@@ -1,17 +1,14 @@
-from django import forms
+from django.forms.models import ModelForm
 from . import models
 
-
-
-class CustomerForm(forms.Form):
+class CustomerForm(ModelForm):
     class Meta:
         model = models.Customer
         fields = ['name']
 
 
-class QuotationForm(forms.Form):
-    #vehiculeYearMake=forms.IntegerField(label="Vehicule Year Make", required=False)
+class QuotationForm(ModelForm):
     class Meta:
         model = models.Quotation
-        fields = ['vehiculeYearMake', 'vehiculeModel',
-                  'VehiculeNumber', 'vehiculePrice']
+        fields = ['customer', 'vehiculeYearMake', 'vehiculeModel',
+                  'vehiculeNumber', 'vehiculePrice', 'coverages']

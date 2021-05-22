@@ -25,7 +25,7 @@ class Quotation(models.Model):
     vehiculeNumber = models.CharField(max_length=30, blank=True, null=True)
     vehiculePrice = models.DecimalField(max_digits=10, decimal_places=2, default=100000, validators=[MinValueValidator(30000)])
     quotationPrice = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    coverages = models.ManyToManyField(Coverage)
+    coverages = models.ManyToManyField(Coverage, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 

@@ -10,25 +10,35 @@ from django.http import HttpResponse
 
 def index(request):
     lst = models.Quotation.objects.all()
-    return render(request, "quotations/quotation_list.html", {"quotations":lst})
+    return render(request, "quotations/quotation_list.html", {"quotations": lst})
 
 
 def quotation(request, id):
     quotation = models.Quotation.objects.get(pk=id)
-    return render(request, "quotations/quotation.html", {"quotation":quotation})
+    return render(request, "quotations/quotation.html", {"quotation": quotation})
+
 
 def create(request):
-    if request.method=="POST":
+    print(request.method)
+    if request.method == "POST":
+        print("POST Method")
         createform = forms.QuotationForm(request.POST)
         if createform.is_valid():
-            mod=createform.cleaned_data["vehiculeModel"]
-            ym=createform.cleaned_data["vehiculeYearMake"]
-            t = models.Quotation(vehiculeModel=mod, vehiculeYearMake=ym)
+
+            t = models.Quotation(
+                customer=createform.cleaned_data["customer"],
+                vehiculeModel=createform.cleaned_data["vehiculeModel"],
+                vehiculeYearMake=createform.cleaned_data["vehiculeYearMake"],
+                vehiculeNumber=createform.cleaned_data["vehiculeNumber"],
+                vehiculePrice=createform.cleaned_data["vehiculePrice"],
+            )
+            t.save()
+            for c in createform.cleaned_data["coverages"]:
+                t.coverages.add(c)  
             t.save()
 
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect("/quotation/" + str(t.id))
     else:
-        createform= modelform_factory(models.Quotation, fields=("customer","vehiculeModel","vehiculeYearMake", "vehiculeNumber","vehiculePrice", "coverages"))
-        print(createform)
+        createform = forms.QuotationForm()
 
-    return render(request, "quotations/create.html", {"form":createform })
+    return render(request, "quotations/create.html", {"form": createform})
