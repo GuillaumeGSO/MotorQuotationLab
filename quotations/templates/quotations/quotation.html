@@ -1,0 +1,12 @@
+{% extends 'quotations/base.html' %}
+{% block content %}
+    <h1> {{quotation.vehiculeModel}}</h1>
+    <h2> {{quotation.vehiculeYearMake}}</h2>
+    <h3>{{quotation.vehiculePrice}}</h3>
+    <ul>
+    {% for item in quotation.coverages.all %}
+        <li>{{ item.description }}</li>
+    {% endfor %}
+    </ul>
+    <h2>Final price : RM {{quotation.quotationPrice}}</h2>
+{% endblock %}

@@ -1,8 +1,14 @@
 from django.shortcuts import render
+from . import models 
 
 # Create your views here.
 from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("Welcom. You're at the Quotations index.")
+    return render(request, "quotations/base.html", {})
+
+
+def quotation(request, id):
+    quotation = models.Quotation.objects.get(pk=id)
+    return render(request, "quotations/quotation.html", {"quotation":quotation})
