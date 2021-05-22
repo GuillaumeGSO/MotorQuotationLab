@@ -28,10 +28,10 @@ def send_emails_service(qs):
 
 
 class QuotationModelAdmin(admin.ModelAdmin):
-    list_display = ('customer','vehiculeModel','quotationPrice', 'modified')
+    list_display = ('customer','vehiculeModel', 'vehiculePrice','quotationPrice', 'modified')
     ordering = ('created','modified')
     search_fields = ['vehiculeModel']
-    actions = ['send_emails', ]
+    actions = ['send_emails', 'refresh_quotation_price']
     
     @admin.action(description='Send email to user')
     def send_emails(self, request, queryset):
@@ -41,5 +41,17 @@ class QuotationModelAdmin(admin.ModelAdmin):
             '%d emails were successfully sent.',
             sent,
         ) % sent, messages.SUCCESS)
+    
+    @admin.action(description='Refresh quotation price')
+    def refresh_quotation_price(self, request, queryset):
+        for q in queryset:
+            q.quotationPrice = q.compute_quotation_price()
+            q.save()
+        
+        self.message_user(request, ngettext(
+            '%d quotation was successfully updated.',
+            '%d quotation were successfully updated.',
+            len(queryset),
+        ) % len(queryset), messages.SUCCESS)
 
 quotAdmin.register(models.Quotation, QuotationModelAdmin)
