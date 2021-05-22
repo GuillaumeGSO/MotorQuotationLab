@@ -1,13 +1,17 @@
 {% extends 'quotations/base.html' %}
 
 {% block title %}My quotations{% endblock %}
-
 {% block content %}
+<form method="get" action="create">
+    <button type="submit" class="btn btn-primary" name="newQuotation">Create new Quotation</button>
+</form>
 <table class="table table-hover table-dark">
     <thead class="thead-light">
         <tr>
-            <th scope="col">Model</th>
+            <th scope="col">Created</th>
             <th scope="col">Year</th>
+            <th scope="col">Model</th>
+            <th scope="col">Number</th>
             <th scope="col">Vehicule Price</th>
             <th scope="col">Cotation Price</th>
             <th scope="col">Coverage </th>
@@ -17,8 +21,10 @@
 
         {% for q in quotations.all %}
         <tr class="clickable" onclick="window.location='quotation/{{q.id}}'">
-            <td>{{q.vehiculeModel}}</td>
+            <td>{{q.short_creation_date}}</td>
             <td>{{q.vehiculeYearMake}}</td>
+            <td>{{q.vehiculeModel}}</td>
+            <td>{{q.vehiculeNumber}}</td>
             <td>{{q.vehiculePrice}}</td>
             <td>{{q.quotationPrice}}</td>
             <td>
@@ -32,7 +38,5 @@
         {% endfor%}
     </tbody>
 </table>
-<form method="POST" action="create">
-    <button type="submit" class="btn btn-primary" name="newQuotation">Create new Quotation</button>
-</form>
+
 {% endblock %}

@@ -30,10 +30,10 @@ class Quotation(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '{} - {} - {}'.format(self.short_date(self.created), self.customer.name, self.vehiculeModel)
+        return '{} - {} - {}'.format(self.short_creation_date(), self.customer.name, self.vehiculeModel)
 
-    def short_date(self, adate):
-        return date(adate, "Y/n/j")
+    def short_creation_date(self):
+        return date(self.created, "j/n/Y")
     
     def save_and_calculate(self, coverage_list):
         result = 0.00
