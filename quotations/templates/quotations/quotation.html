@@ -1,12 +1,14 @@
 {% extends 'quotations/base.html' %}
+{% block title %}Quotation created on {{quotation.created}}{% endblock %}
 {% block content %}
-    <h1> {{quotation.vehiculeModel}}</h1>
-    <h2> {{quotation.vehiculeYearMake}}</h2>
-    <h3>{{quotation.vehiculePrice}}</h3>
-    <ul>
+<h1> {{quotation.vehiculeModel}}</h1>
+<h2> {{quotation.vehiculeYearMake}}</h2>
+<h3>{{quotation.vehiculePrice}}</h3>
+<ul>
     {% for item in quotation.coverages.all %}
-        <li>{{ item.description }}</li>
+    <li>{{ item.description }}</li>
     {% endfor %}
-    </ul>
-    <h2>Final price : RM {{quotation.quotationPrice}}</h2>
+</ul>
+<h2>Final price : RM {{quotation.quotationPrice}}</h2>
+<a role="button" href="/" class="btn btn-primary">Back</a>
 {% endblock %}

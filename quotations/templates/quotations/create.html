@@ -1,8 +1,11 @@
 {% extends 'quotations/base.html' %}
+{% block title %}New quotation{% endblock %}
 {% block content %}
-    <form method="POST", action="create">
+<div class="form-group">
+    <form method="POST" action="create" >
         {{form.as_p}}
-        <button type="submit", name="save">Save</button>
+        <p>Final price : RM {{quotation.quotationPrice}}</p>
+        <button type="submit" class="btn btn-primary" name="save">Save</button>
     </form>
-    <h2>Final price : RM {{quotation.quotationPrice}}</h2>
-{% endblock %}  
+</div>
+{% endblock %}
