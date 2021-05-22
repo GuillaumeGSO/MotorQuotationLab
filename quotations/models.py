@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.template.defaultfilters import date
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from django.core.mail import EmailMessage
 
 
 class Customer(models.Model):
@@ -42,12 +45,12 @@ class Quotation(models.Model):
 
     def save_and_calculate(self, coverage_list):
         if not self.id:
-            #this first save creates the id before the m2m save
+            # this first save creates the id before the m2m save
             self.save()
         self.coverages.clear()
         for c in coverage_list:
             self.coverages.add(c)
-        #Calculate the quotation price
+        # Calculate the quotation price
         self.quotationPrice = self.compute_quotation_price()
         self.save()
 
@@ -58,3 +61,31 @@ class Quotation(models.Model):
         for c in self.coverages.all():
             result += c.price
         return result
+
+    def generate_pdf(self):
+        x = 100
+        y = 100
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer, pagesize="letter")
+        p.drawString(x, y, "TO DO")
+        p.showPage()
+        p.save()
+
+        # FIXME : i'd like to write temporairly the pdf file so i can visualize it
+        pdf = buffer.getvalue()
+        f = open("tmp.pdf", "wb")
+        f.write(pdf)
+        f.close()
+        # end FIXME
+
+        buffer.close()
+        return pdf
+
+    def send_email(self):
+        EmailMsg = EmailMessage("Your quotation", "Please fin attached the quotation you requested", 'no-reply@email.com', [
+            self.customer.email], headers={'Reply-To': 'no-reply@email.com'})
+        pdf = self.generate_pdf()
+        EmailMsg.attach('yourChoosenFileName.pdf', pdf, 'application/pdf')
+        # Use True when able to handle exception
+        # see in settings.py for EMAIL_BACKEND configuration
+        EmailMsg.send(fail_silently=False)
