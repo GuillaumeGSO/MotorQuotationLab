@@ -1,0 +1,26 @@
+{% extends 'quotations/base.html' %}
+Hi
+
+{% block content %}
+    {% for q in quotations.all %}
+    <table>
+        <tr>    
+        <td>{{q.vehiculeModel}}</td>
+        <td>{{q.vehiculeYearMake}}</td>
+        <td>{{q.vehiculePrice}}</td>
+        <td>{{q.quotationPrice}}</td>
+        <td>    
+            <ul>
+                {% for item in q.coverages.all %}
+                    <li>{{ item.description }}</li>
+                {% endfor %}
+            </ul>
+        </td>
+        </tr>
+    </table>
+    {% endfor%}
+<form method="GET", action="create">
+    <button type="submit", name="newQuotation">Create new Quotation</button>
+</form>
+
+{% endblock %}
