@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.test import TestCase
 import sqlite3
+from decimal import Decimal
 
 
 from . import models
@@ -48,7 +49,7 @@ class QuotationModelTests(TestCase):
         self.mod = models.Quotation.objects.create(
             customer=self.cust, vehiculeModel="MODEL", quotationPrice=234.989)
 
-    def FIXMEtest_missing_customer_constraint(self):
+    def test_missing_customer_constraint(self):
         """
         Can't make this work !
         """
@@ -76,7 +77,7 @@ class QuotationModelTests(TestCase):
         self.mod.created = date_time_obj
         self.assertEquals(self.mod.short_creation_date(), "7/10/2020")
 
-    def FIXMEtest_save_and_calculate_no_id(self):
+    def test_save_and_calculate_no_id(self):
         """
         Hard to make this work, is the method well written ?
         """
@@ -106,10 +107,13 @@ class QuotationModelTests(TestCase):
         self.assertEquals(price, 2)
 
     def test_compute_price_no_price_1_coverage(self):
+        """
+        Can't make this work !
+        """
         # Given
-        self.mod.vehiculePrice = 0
+        self.mod.vehiculePrice = Decimal('0')
         cov100 = models.Coverage.objects.create(
-            description="cov100", price=100)
+            description="cov100", price=Decimal('100'))
         self.mod.coverages.add(cov100)
         # When
         price = self.mod.compute_quotation_price()
@@ -117,11 +121,14 @@ class QuotationModelTests(TestCase):
         self.assertEquals(price, 100)
 
     def test_compute_price_no_price_n_coverages(self):
+        """
+        Can't make this work !
+        """
         # Given
         self.mod.vehiculePrice = 0
         for i in range(100):
             cov = models.Coverage.objects.create(
-                description="cov"+str(i), price=10)
+                description = "cov" + str(i), price = 10)
             self.mod.coverages.add(cov)
         # When
         price = self.mod.compute_quotation_price()
@@ -129,6 +136,9 @@ class QuotationModelTests(TestCase):
         self.assertEquals(price, 1000)
 
     def test_compute_price_a_price_3_coverages(self):
+        """
+        Can't make this work !
+        """
         # Given
         self.mod.vehiculePrice = 1000
         cov100 = models.Coverage.objects.create(

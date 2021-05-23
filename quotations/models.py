@@ -9,6 +9,7 @@ from django.core.mail import EmailMessage
 
 class Customer(authModel.User):
     phone = models.CharField(max_length=15)
+
     def __str__(self):
         return self.username + ' (' + self.email + ')'
 
@@ -56,8 +57,8 @@ class Quotation(models.Model):
         result = 0.0
         if self.vehiculePrice:
             result = self.vehiculePrice * 2 / 100
-        sumcov = sum(cov.price for cov in self.coverages.all() )
-        return result + float(sumcov)
+        sumcov = sum(cov.price for cov in self.coverages.all())
+        return result + sumcov
 
     def generate_pdf(self):
         x = 100
@@ -67,14 +68,7 @@ class Quotation(models.Model):
         p.drawString(x, y, "TO DO")
         p.showPage()
         p.save()
-
         pdf = buffer.getvalue()
-        # FIXME : i'd like to write temporairly the pdf file so i can visualize it
-        #f = open("tmp.pdf", "wb")
-        #f.write(pdf)
-        #f.close()
-        # end FIXME
-
         buffer.close()
         return pdf
 
