@@ -4,27 +4,15 @@ from django.contrib import messages
 from django.utils.translation import ngettext
 
 from . import models
-import traceback
-
 
 # Models in the regular admin
-admin.site.register([models.Customer, models.Coverage])
-
+admin.site.register([models.Coverage])
 
 class QuotationAdminSite(AdminSite):
     site_header = "Quotations view by Agent"
     site_title = "Quotation Admin"
 
 quotAdmin = QuotationAdminSite(name='quotAdmin')
-
-
-
-
-def send_emails_service(qs):
-    for q in qs:
-        print(q.customer.email)
-    traceback.print_exc()
-    return len(qs)
 
 
 class QuotationModelAdmin(admin.ModelAdmin):
@@ -35,12 +23,13 @@ class QuotationModelAdmin(admin.ModelAdmin):
     
     @admin.action(description='Send email to user')
     def send_emails(self, request, queryset):
-        sent = send_emails_service(queryset)
+        for q in queryset:
+            q.send_email()
         self.message_user(request, ngettext(
             '%d email was successfully sent.',
             '%d emails were successfully sent.',
-            sent,
-        ) % sent, messages.SUCCESS)
+            len(queryset),
+        ) % len(queryset), messages.SUCCESS)
     
     @admin.action(description='Refresh quotation price')
     def refresh_quotation_price(self, request, queryset):

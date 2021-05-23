@@ -64,16 +64,16 @@ class Quotation(models.Model):
         x = 100
         y = 100
         buffer = BytesIO()
-        p = canvas.Canvas(buffer, pagesize="letter")
+        p = canvas.Canvas(buffer, pagesize="A4")
         p.drawString(x, y, "TO DO")
         p.showPage()
         p.save()
 
-        # FIXME : i'd like to write temporairly the pdf file so i can visualize it
         pdf = buffer.getvalue()
-        f = open("tmp.pdf", "wb")
-        f.write(pdf)
-        f.close()
+        # FIXME : i'd like to write temporairly the pdf file so i can visualize it
+        #f = open("tmp.pdf", "wb")
+        #f.write(pdf)
+        #f.close()
         # end FIXME
 
         buffer.close()
