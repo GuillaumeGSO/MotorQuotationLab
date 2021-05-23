@@ -17,21 +17,21 @@ def quotation(request, id):
 
 @login_required
 def create(request):
-    print(request.method)
     if request.method == "POST":
         print("POST Method")
+        cust = models.Customer.objects.filter(id = request.user.id)
         createform = forms.QuotationForm(request.POST)
         if createform.is_valid():
-
             t = models.Quotation(
-                customer=request.user,
+                #Need to find the customer object that is the user connected
+                customer=cust.first(),
                 vehiculeModel=createform.cleaned_data["vehiculeModel"],
                 vehiculeYearMake=createform.cleaned_data["vehiculeYearMake"],
                 vehiculeNumber=createform.cleaned_data["vehiculeNumber"],
                 vehiculePrice=createform.cleaned_data["vehiculePrice"],
             )
             t.save_and_calculate(createform.cleaned_data["coverages"])
-            #t.send_email()
+            t.send_email()
             return HttpResponseRedirect("/quotation/" + str(t.id))
     else:
         createform = forms.QuotationForm()
