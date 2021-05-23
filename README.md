@@ -28,3 +28,7 @@ I've created several users :
 ## Usage
  - go to http://127.0.0.1:8000/, login or create a new account
  - Have fun !
+
+## Features and bonuses
+ - visit [Motor Quotation App project board](https://github.com/GuillaumeGSO/MotorQuotationLab/projects/1) to view my progress
+ - visit [Issues and tasks project board](https://github.com/GuillaumeGSO/MotorQuotationLab/projects/2) to add tasks, issues, new features requests
