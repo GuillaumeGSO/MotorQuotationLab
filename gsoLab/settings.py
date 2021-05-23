@@ -129,11 +129,11 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#Testing the email
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = '.'
-#console log
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#Testing email : to log files
+#EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+#EMAIL_FILE_PATH = '.'
+#Testing email : to console log
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 #Because we're already using it in base.html
 CRISPY_TEMPLATE_PACK='bootstrap4'
