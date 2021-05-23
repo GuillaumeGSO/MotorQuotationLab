@@ -53,12 +53,11 @@ class Quotation(models.Model):
         self.save()
 
     def compute_quotation_price(self):
-        result = 0
+        result = 0.0
         if self.vehiculePrice:
             result = self.vehiculePrice * 2 / 100
-        for c in self.coverages.all():
-            result += c.price
-        return result
+        sumcov = sum(cov.price for cov in self.coverages.all() )
+        return result + float(sumcov)
 
     def generate_pdf(self):
         x = 100
