@@ -1,9 +1,10 @@
 {% extends 'quotations/base.html' %}
 {% block title %}New quotation{% endblock %}
+{% load crispy_forms_tags %}
 {% block content %}
 <div class="form-group">
     <form method="post" action="/create/" >
-        {{form.as_p}}
+        {{form|crispy}}
         {% csrf_token %}
 
         {% if quotation.quotationPrice > 0 %}
