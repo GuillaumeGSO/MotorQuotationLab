@@ -4,13 +4,34 @@
 <head>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style type="text/css">
+    
+    .sidenav {
+      height: 100%;
+      width : 300px;
+      position : fixed;
+      z-index : 1;
+      top:0;
+      left:0;
+      overflow-x: hidden;
+      padding-top : 20px;
+    }
+    .sidenav a {
+      padding:8px 6px 6px 16px;
+      font-size:25px;
+      color: #818181;
+    }
+    .sidenav a:hover {
+      color: #f1f1f1;
+    }
+  </style>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Motor Insurance Quotation</title>
 </head>
 
 <body>
-  <div class="sidenav">
+  <div class="sidenav table-dark">
     <ul class="nav flex-column">
       <li class="nav-item">
         <a class="nav-link active" href="/">My Cotations</a>
@@ -18,10 +39,13 @@
       <li class="nav-item">
         <a class="nav-link" href="/create">Create Quotation</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
     </ul>
   </div>
   
-  <div id="content" , name="content" class="main">
+  <div id="content" class="main">
     <div class="row justify-content-center">
       <div class="col-8">
         <h5 class="mt-2">{%block title%}{% endblock %}</h5>

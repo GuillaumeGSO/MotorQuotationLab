@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import models as authModel
 from django.core.validators import MinValueValidator
 from django.template.defaultfilters import date
 from io import BytesIO
@@ -6,13 +7,10 @@ from reportlab.pdfgen import canvas
 from django.core.mail import EmailMessage
 
 
-class Customer(models.Model):
-    name = models.CharField(max_length=50, null=False)
+class Customer(authModel.User):
     phone = models.CharField(max_length=15)
-    email = models.EmailField(max_length=50, null=False)
-
     def __str__(self):
-        return self.name + ' (' + self.email + ')'
+        return self.username + ' (' + self.email + ')'
 
 
 class Coverage(models.Model):
@@ -25,7 +23,7 @@ class Coverage(models.Model):
 
 class Quotation(models.Model):
     customer = models.ForeignKey(
-        Customer, on_delete=models.CASCADE)
+        Customer, on_delete=models.CASCADE, related_name="quotations")
     vehiculeYearMake = models.PositiveSmallIntegerField(default=2021)
     vehiculeModel = models.CharField(max_length=80)
     vehiculeNumber = models.CharField(max_length=30, blank=True, null=True)
@@ -38,7 +36,7 @@ class Quotation(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '{} - {} - {} - {}'.format(self.short_creation_date(), self.customer.name, self.vehiculeModel, self.quotationPrice)
+        return '{} - {} - {} - {}'.format(self.short_creation_date(), self.customer.email, self.vehiculeModel, self.quotationPrice)
 
     def short_creation_date(self):
         return date(self.created, "j/n/Y")
