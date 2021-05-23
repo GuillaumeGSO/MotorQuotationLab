@@ -23,7 +23,7 @@ class Coverage(models.Model):
 
 class Quotation(models.Model):
     customer = models.ForeignKey(
-        Customer, on_delete=models.CASCADE)
+        Customer, on_delete=models.CASCADE, related_name="quotations")
     vehiculeYearMake = models.PositiveSmallIntegerField(default=2021)
     vehiculeModel = models.CharField(max_length=80)
     vehiculeNumber = models.CharField(max_length=30, blank=True, null=True)
@@ -36,7 +36,7 @@ class Quotation(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '{} - {} - {} - {}'.format(self.short_creation_date(), "username", self.vehiculeModel, self.quotationPrice)
+        return '{} - {} - {} - {}'.format(self.short_creation_date(), self.customer.email, self.vehiculeModel, self.quotationPrice)
 
     def short_creation_date(self):
         return date(self.created, "j/n/Y")

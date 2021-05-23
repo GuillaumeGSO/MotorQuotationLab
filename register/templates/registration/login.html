@@ -1,13 +1,16 @@
 {% extends 'quotations/base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}Quotations Login{% endblock %}
 {% load crispy_forms_tags %}
-{% block content %}
+{% block content%}
 <div class="form-group">
     <form method="POST">
         {% csrf_token %}
         {{form|crispy}}
+        <p>Don't have an account ? Create one <a href="/register">here</a></p>
+        
         <button type="submit" class="btn btn-primary">Login</button>
+
     </form>
 </div>
 {% endblock %}

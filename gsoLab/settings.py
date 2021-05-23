@@ -137,3 +137,9 @@ EMAIL_FILE_PATH = '.'
 
 #Because we're already using it in base.html
 CRISPY_TEMPLATE_PACK='bootstrap4'
+
+#Go to the main page after login
+LOGIN_REDIRECT_URL = "/"
+#go to the login page after logout
+LOGOUT_REDIRECT_URL = "/login"
+LOGIN_URL = "/login"

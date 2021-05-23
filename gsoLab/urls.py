@@ -24,4 +24,5 @@ urlpatterns = [
     path('quotations-admin/', quotAdmin.urls),
     path('register/', rviews.register),
     path('', include('quotations.urls')),
+    path('', include('django.contrib.auth.urls')),
 ]
