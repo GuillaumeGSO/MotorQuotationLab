@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from quotations.admin import quotAdmin 
+from quotations.admin import quotAdmin
+from register import views as rviews
 
 urlpatterns = [
     #regular admin
     path('admin/', admin.site.urls),
     path('quotations-admin/', quotAdmin.urls),
-    path('', include('quotations.urls'))
+    path('register/', rviews.register),
+    path('', include('quotations.urls')),
 ]

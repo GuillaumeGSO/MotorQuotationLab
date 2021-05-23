@@ -2,7 +2,6 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from . import models
 from . import forms
-from django.forms import modelform_factory
 
 # Create your views here.
 from django.http import HttpResponse
