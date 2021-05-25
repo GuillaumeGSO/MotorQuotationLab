@@ -13,7 +13,7 @@ class Customer (authModel.User):
     phone = models.CharField(max_length=15, null=True, blank=True)
 
     def __str__(self):
-        return self.username + ' (' + self.email + ')'
+        return self.last_name + ' (' + self.email + ')'
 
 
 class Coverage(models.Model):

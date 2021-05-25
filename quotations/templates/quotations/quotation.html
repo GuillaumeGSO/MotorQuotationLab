@@ -2,12 +2,12 @@
 {% block title %}Quotation created on {{quotation.created}}{% endblock %}
 {% block content %}
     <h3>Customer</h3>
-    <p>Name: {{quotation.customer.username}}</p>
-    <p>Email: {{quotation.customer.email}}</p>
+    <p>Name: {{quotation.customer.last_name}}</p>
+    <p>Email: {{quotation.customer.username}}</p>
     <p>Phone: {{quotation.customer.phone}}</p>
     <hr/>
     <h3>Vehicle</h3>
-    <p>Year make:{{quotation.vehiculeYearMake}}</p>
+    <p>Year make: {{quotation.vehiculeYearMake}}</p>
     <p>Model: {{quotation.vehiculeModel}}</p>
     <p>Number: {{quotation.vehiculeNumber}}</p>
     <p>Price: {{quotation.vehiculePrice}}</p>

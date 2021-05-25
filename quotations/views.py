@@ -41,27 +41,32 @@ class QuotationCreateView(CreateView):
         self.createform = forms.QuotationForm(request.POST)
         if self.createform.is_valid():
             cust = self.get_by_email_or_create(
-                request, self.createform.cleaned_data["email"])
+                request)
             t = models.Quotation(
                 customer=cust,
-                vehiculeModel=self.createform.cleaned_data["vehiculeModel"],
-                vehiculeYearMake=self.createform.cleaned_data["vehiculeYearMake"],
-                vehiculeNumber=self.createform.cleaned_data["vehiculeNumber"],
-                vehiculePrice=self.createform.cleaned_data["vehiculePrice"],
-                covWind=self.createform.cleaned_data["covWind"],
-                covPass=self.createform.cleaned_data["covPass"],
-                covFlood=self.createform.cleaned_data["covFlood"],
+                vehiculeModel=self.createform.cleaned_data['vehiculeModel'],
+                vehiculeYearMake=self.createform.cleaned_data['vehiculeYearMake'],
+                vehiculeNumber=self.createform.cleaned_data['vehiculeNumber'],
+                vehiculePrice=self.createform.cleaned_data['vehiculePrice'],
+                covWind=self.createform.cleaned_data['covWind'],
+                covPass=self.createform.cleaned_data['covPass'],
+                covFlood=self.createform.cleaned_data['covFlood'],
             )
         t.calculate_and_save()
         t.send_email()
-        return HttpResponseRedirect("/quotation/" + str(t.id))
+        return HttpResponseRedirect('/quotation/' + str(t.id))
 
-    def get_by_email_or_create(self, request, mail):
-        cust = models.Customer.objects.filter(email__icontains=mail)
+    def get_by_email_or_create(self, request):
+        mail = self.createform.cleaned_data['email']
+        cust = models.Customer.objects.filter(username__icontains=mail)
         if cust:
             return cust.first()
-        cust = models.Customer.objects.create(username="TODO", email=mail,
-                                              phone="ddd", password="Tigerlab@2021")
+        #No user
+        cust = models.Customer.objects.create(
+            username=mail,
+            last_name=self.createform.cleaned_data['name'],
+            phone=self.createform.cleaned_data['phone'],
+            password='Tigerlab@2021')
         login(request, cust)
         return cust
 
