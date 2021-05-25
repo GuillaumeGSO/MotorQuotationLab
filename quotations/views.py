@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import login
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from . import models
 from . import forms
 
@@ -10,15 +11,14 @@ from . import forms
 class QuotationListView(ListView):
 
     model = models.Quotation
-    """ model = models.Quotation
     template_name = 'quotations/quotation_list.html'
 
-    @login_required
+    # @login_required(login_url='/register/login/')
     def get(self, request):
-        return render(request, reversed('quotation_list'))
-
-    def get_queryset(self):
-        return models.Quotation.objects.filter(customer=self.request.user) """
+        quotations = models.Quotation.objects.filter(
+            customer__username=request.user.username)
+        return render(request, self.template_name, {'quotations': quotations,
+                                                    'userConnected': request.user.username})
 
 
 class QuotationDetailView(DetailView):
@@ -61,7 +61,7 @@ class QuotationCreateView(CreateView):
         cust = models.Customer.objects.filter(username__icontains=mail)
         if cust:
             return cust.first()
-        #No user
+        # No user
         cust = models.Customer.objects.create(
             username=mail,
             last_name=self.createform.cleaned_data['name'],

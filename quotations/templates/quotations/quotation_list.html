@@ -1,11 +1,12 @@
 {% extends 'quotations/base.html' %}
 
-{% block title %}My quotations{% endblock %}
+{% block title %}My quotations {% endblock %}
 {% block content %}
 <form method="get" action="create">
     <button type="submit" class="btn btn-secondary" name="newQuotation">Create new Quotation</button>
 </form>
 {% if quotations %}
+    {{userConnected}}
     <table class="table table-hover table-dark">
         <thead class="thead-light">
             <tr>
