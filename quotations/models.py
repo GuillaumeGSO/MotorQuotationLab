@@ -36,11 +36,11 @@ class Quotation(models.Model):
     quotationPrice = models.DecimalField(
         max_digits=10, decimal_places=2, default=0, editable=False)
     covWind = models.BooleanField(
-        default=False, name='WIND_COV', verbose_name="Windscreen coverage")
+        default=False, verbose_name="Windscreen coverage")
     covPass = models.BooleanField(
-        default=False, name='PASS_COV', verbose_name="Passenger liability coverage")
-    covFlood = models.BooleanField(default=False, name='FLOO_COV',
-                                   verbose_name="Flood, Windstorm,Landslide or Subsidence coverage"),
+        default=False, verbose_name="Passenger liability coverage")
+    covFlood = models.BooleanField(default=False,
+                                   verbose_name="Flood, Windstorm,Landslide or Subsidence coverage")
     created = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):

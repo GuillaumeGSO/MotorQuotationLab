@@ -6,7 +6,7 @@
     <form method="POST" action="/create/" >
         {% csrf_token %}
         {{form|crispy}}
-        <button type="submit" class="btn btn-secondary" name="save">Save</button>
+        <button type="submit" class="btn btn-secondary" name="create">Create</button>
     </form>
 </div>
 {% endblock %}

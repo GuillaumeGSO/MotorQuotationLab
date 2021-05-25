@@ -11,6 +11,8 @@ class QuotationForm(ModelForm):
 
     class Meta:
         model = models.Quotation
-        fields = ['name', 'email', 'phone','vehiculeYearMake', 'vehiculeModel',
+        fields = ['name', 'email', 'phone', 'vehiculeYearMake', 'vehiculeModel',
                   'vehiculeNumber', 'vehiculePrice',
+                  'covWind', 'covPass', 'covFlood',
                   ]
+                
