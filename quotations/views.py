@@ -48,19 +48,20 @@ class QuotationCreateView(CreateView):
                 vehiculeYearMake=self.createform.cleaned_data["vehiculeYearMake"],
                 vehiculeNumber=self.createform.cleaned_data["vehiculeNumber"],
                 vehiculePrice=self.createform.cleaned_data["vehiculePrice"],
+                covWind=self.createform.cleaned_data["covWind"],
+                covPass=self.createform.cleaned_data["covPass"],
+                covFlood=self.createform.cleaned_data["covFlood"],
             )
-        t.save_and_calculate()
+        t.calculate_and_save()
         t.send_email()
         return HttpResponseRedirect("/quotation/" + str(t.id))
 
     def get_by_email_or_create(self, request, mail):
         cust = models.Customer.objects.filter(email__icontains=mail)
         if cust:
-            print(cust)
             return cust.first()
-        cust = models.Customer.objects.create(username=mail, email=mail,
+        cust = models.Customer.objects.create(username="TODO", email=mail,
                                               phone="ddd", password="Tigerlab@2021")
-        print(cust)
         login(request, cust)
         return cust
 
