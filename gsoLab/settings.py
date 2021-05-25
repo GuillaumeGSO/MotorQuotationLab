@@ -91,7 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
-    
+
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
@@ -129,17 +129,17 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#Testing email : to log files
+# Testing email : to log files
 #EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 #EMAIL_FILE_PATH = '.'
-#Testing email : to console log
+# Testing email : to console log
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-#Because we're already using it in base.html
-CRISPY_TEMPLATE_PACK='bootstrap4'
+# Because we're already using it in base.html
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-#Go to the main page after login
+# Go to the main page after login
 LOGIN_REDIRECT_URL = "/"
-#go to the login page after logout
-LOGOUT_REDIRECT_URL = "/login"
+# go to home after logout
+LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/login"

@@ -1,9 +1,8 @@
-from django.http.response import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import render
 from django.contrib.auth import login
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from . import models
 from . import forms
 
@@ -69,8 +68,10 @@ class QuotationCreateView(CreateView):
         cust = models.Customer.objects.create(
             username=mail,
             last_name=self.createform.cleaned_data['name'],
-            phone=self.createform.cleaned_data['phone'],
-            password='Tigerlab@2021')
+            phone=self.createform.cleaned_data['phone']
+            )
+        cust.set_password('Tigerlab@2021')
+        cust.save()
         login(request, cust)
         return cust
 
