@@ -9,6 +9,7 @@ from django.core.mail import EmailMessage
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 
+
 class Customer (authModel.User):
     phone = models.CharField(max_length=15, null=True, blank=True)
 
@@ -34,25 +35,28 @@ def get_coverage_price_by_name(covname):
         return 0
     print(obj)
     return obj.price
-    
 
 
 class Quotation(models.Model):
+    BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
+
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, related_name="quotations")
     vehiculeYearMake = models.PositiveSmallIntegerField(default=2021)
     vehiculeModel = models.CharField(max_length=80)
-    vehiculeNumber = models.CharField(max_length=30, blank=True, null=True)
+    vehiculeNumber = models.CharField(max_length=30)
     vehiculePrice = models.DecimalField(
         max_digits=10, decimal_places=2, default=100_000,
         validators=[MinValueValidator(30_000)])
     quotationPrice = models.DecimalField(
         max_digits=10, decimal_places=2, default=0, editable=False)
-    covWind = models.BooleanField(
-        default=False, verbose_name="Windscreen coverage")
-    covPass = models.BooleanField(
-        default=False, verbose_name="Passenger liability coverage")
-    covFlood = models.BooleanField(default=False,
+    covWind = models.BooleanField(choices=BOOL_CHOICES,
+                                  default=False, verbose_name="Windscreen coverage")
+    covPass = models.BooleanField(choices=BOOL_CHOICES,
+                                  default=False,
+                                  verbose_name="Passenger liability coverage")
+    covFlood = models.BooleanField(choices=BOOL_CHOICES,
+                                   default=False,
                                    verbose_name="Flood, Windstorm,Landslide or Subsidence coverage")
     created = models.DateTimeField(auto_now_add=True)
 

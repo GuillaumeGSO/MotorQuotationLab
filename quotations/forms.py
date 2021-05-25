@@ -15,4 +15,4 @@ class QuotationForm(ModelForm):
                   'vehiculeNumber', 'vehiculePrice',
                   'covWind', 'covPass', 'covFlood',
                   ]
-                
+
