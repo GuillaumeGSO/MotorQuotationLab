@@ -130,3 +130,5 @@ dmypy.json
 .DS_Store
 quotations/migrations/
 *.log
+.vscode/settings.json
+.vscode/launch.json

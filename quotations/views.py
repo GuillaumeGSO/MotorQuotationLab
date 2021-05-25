@@ -52,16 +52,20 @@ class QuotationCreateView(CreateView):
                 covPass=self.createform.cleaned_data['covPass'],
                 covFlood=self.createform.cleaned_data['covFlood'],
             )
-        t.calculate_and_save()
-        t.send_email()
+            t.calculate_and_save()
+            t.send_email()
+        else:
+            return render(request, self.template_name, {'form': self.createform})
         return HttpResponseRedirect('/quotation/' + str(t.id))
 
     def get_by_email_or_create(self, request):
         mail = self.createform.cleaned_data['email']
         cust = models.Customer.objects.filter(username__icontains=mail)
         if cust:
+            login(request, cust.first())
             return cust.first()
-        # No user
+
+        # No user ? create one
         cust = models.Customer.objects.create(
             username=mail,
             last_name=self.createform.cleaned_data['name'],
