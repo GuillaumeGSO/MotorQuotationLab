@@ -1,10 +1,11 @@
 from django.urls import path
 
-from . import views
+from quotations import views
 
-app_name = 'polls'
+app_name = 'Quotations'
+
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('quotation/<int:id>', views.quotation, name='quotation'),
-    path('create/', views.create, name='create'),
+    path('', views.QuotationListView.as_view(), name='quotation_list'),
+    path('quotation/<int:id>', views.QuotationDetailView.as_view(), name='quotation_detail'),
+    path('create/', views.QuotationCreateView.as_view(), name='create'),
 ]
