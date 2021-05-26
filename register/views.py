@@ -2,9 +2,8 @@ from register.forms import RegisterForm
 from django.shortcuts import render, redirect
 
 
-
 def register(request):
-    if request.method=="POST":
+    if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()

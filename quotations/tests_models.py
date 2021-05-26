@@ -87,7 +87,7 @@ class QuotationModelTests(TestCase):
             username="user", id=999)
         self.assertIsNone(newObj.id)
         # self.assertIsNone(newObj.coverages)
-        newObj.save_and_calculate()
+        newObj.calculate_and_save()
         self.assertIsNotNone(newObj.id)
 
     def test_compute_price_no_price_no_coverage(self):

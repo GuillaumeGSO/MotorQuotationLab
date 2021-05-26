@@ -1,15 +1,22 @@
 {% extends 'quotations/base.html' %}
 {% block title %}Quotation created on {{quotation.created}}{% endblock %}
 {% block content %}
-<p>{{quotation.vehiculeYearMake}}</p>
-<p>{{quotation.vehiculeModel}}</p>
-<p>{{quotation.vehiculeNumber}}</p>
-<p>{{quotation.vehiculePrice}}</p>
-<ul>
-    {% for item in quotation.coverages.all %}
-    <li>{{ item.description }}</li>
-    {% endfor %}
-</ul>
-<h5>Quotation price : RM {{quotation.quotationPrice}}</h5>
-<a role="button" href="/" class="btn btn-secondary">Home</a>
+    <h3>Customer</h3>
+    <p>Name: {{quotation.customer.last_name}}</p>
+    <p>Email: {{quotation.customer.username}}</p>
+    <p>Phone: {{quotation.customer.phone}}</p>
+    <hr/>
+    <h3>Vehicle</h3>
+    <p>Year make: {{quotation.vehiculeYearMake}}</p>
+    <p>Model: {{quotation.vehiculeModel}}</p>
+    <p>Number: {{quotation.vehiculeNumber}}</p>
+    <p>Price: {{quotation.vehiculePrice}}</p>
+    <hr/>
+    <h3>Coverage</h3>
+    <p><input type="checkbox" disabled {% if quotation.covWind %}checked{% endif %}><label>Wind</label></p>
+    <p><input type="checkbox" disabled {% if quotation.covPass %}checked{% endif %}><label>Passenger</label></p>
+    <p><input type="checkbox" disabled {% if quotation.covFlood %}checked{% endif %}><label>Flood</label></p>
+
+    <h5>Quotation price : RM {{quotation.quotationPrice}}</h5>
+    
 {% endblock %}
