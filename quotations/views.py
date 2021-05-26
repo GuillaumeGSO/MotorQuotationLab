@@ -2,17 +2,21 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import login
 from django.views.generic import ListView, DetailView, CreateView
-from django.contrib.auth.decorators import login_required
 from . import models
 from . import forms
 
 
 class QuotationListView(ListView):
 
+    """
+    List of all the :model:`Quotation` made by the connected :model:`Customer`
+    Click on a row to get the quotation detail
+    :template:`quotation/quotation_list.html`
+    """
+
     model = models.Quotation
     template_name = 'quotations/quotation_list.html'
 
-    # @login_required(login_url='/register/login/')
     def get(self, request):
         quotations = models.Quotation.objects.filter(
             customer__username=request.user.username)
@@ -21,17 +25,30 @@ class QuotationListView(ListView):
 
 
 class QuotationDetailView(DetailView):
+    """
+    Display an invidicual :model:`Quotation`
+    TODO email generation from this page
+    template name :template:`quotations/quotation.html`
+    """
 
     model = models.Quotation
     template_name = 'quotations/quotation.html'
 
-    # @login_required
     def get(self, request, id):
+        """
+        get metod to retrieve the quotation
+        TODO replace by an API call
+        """
         quot = models.Quotation.objects.get(id=id)
         return render(request, self.template_name, {'quotation': quot})
 
 
 class QuotationCreateView(CreateView):
+    """
+    Form for :model:`Quotation creation`
+    Automtically generate the email
+    TODO do this in the detail view
+    """
 
     template_name = 'quotations/create.html'
     createform = forms.QuotationForm()
@@ -58,6 +75,9 @@ class QuotationCreateView(CreateView):
         return HttpResponseRedirect('/quotation/' + str(t.id))
 
     def get_by_email_or_create(self, request):
+        """
+        Retrieve the `:model:`Customer with the email inputed or create a new one
+        """
         mail = self.createform.cleaned_data['email']
         cust = models.Customer.objects.filter(username__icontains=mail)
         if cust:
@@ -69,11 +89,14 @@ class QuotationCreateView(CreateView):
             username=mail,
             last_name=self.createform.cleaned_data['name'],
             phone=self.createform.cleaned_data['phone']
-            )
+        )
         cust.set_password('Tigerlab@2021')
         cust.save()
         login(request, cust)
         return cust
 
     def get(self, request):
+        """
+        Initialize the form for `:model:`Quotation creation
+        """
         return render(request, self.template_name, {'form': self.createform})

@@ -19,7 +19,8 @@ from quotations.admin import quotAdmin
 from register import views as rviews
 
 urlpatterns = [
-    #regular admin
+
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('quotations-admin/', quotAdmin.urls),
     path('register/', rviews.register),

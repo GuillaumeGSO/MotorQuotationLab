@@ -11,13 +11,23 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class Customer (authModel.User):
+    """
+    Extends django Customer object to be able to store the phone number
+    Related to :model:`auth.user`
+    """
+
     phone = models.CharField(max_length=15, null=True, blank=True)
 
     def __str__(self):
-        return self.last_name + ' (' + self.email + ')'
+        return self.last_name + ' (' + self.username + ')'
 
 
 class Coverage(models.Model):
+    """
+    Store the coverages used in the app including code (name), description and default price
+    Not related to any other object
+    Do not change the codes : WIND, PASS, FLOOD as they're used in the app 
+    """
     name = models.CharField(max_length=8, primary_key=True)
     description = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -27,8 +37,9 @@ class Coverage(models.Model):
 
 
 def get_coverage_price_by_name(covname):
-    print("search for : ", covname)
-    print(Coverage.objects.all())
+    """
+    Utility method to retrieve default coverage price by its code (name)
+    """
     try:
         obj = Coverage.objects.get(name=covname)
     except ObjectDoesNotExist:
@@ -38,6 +49,10 @@ def get_coverage_price_by_name(covname):
 
 
 class Quotation(models.Model):
+    """
+    Stores all the quotations made with the app
+    related to :model: `customer`
+    """
     BOOL_CHOICES = ((True, 'Yes'), (False, 'No'))
 
     customer = models.ForeignKey(
@@ -61,20 +76,35 @@ class Quotation(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
+        """
+        get the url of the rendering template from urls.py
+        """
         return reverse('quotation', kwargs={'pk': self.pk})
 
     def __str__(self):
+        """
+        Mainly used for quotation-admin and clean display 
+        """
         return f'{self.short_creation_date()} - {self.customer.email} - {self.vehiculeModel} - {self.quotationPrice}'
 
     def short_creation_date(self):
+        """
+        Shorten the timestamp
+        """
         return date(self.created, "j/n/Y")
 
     def calculate_and_save(self):
+        """
+        Updates the quotation price
+        """
         # Calculate the quotation price
         self.quotationPrice = self.compute_quotation_price()
         self.save()
 
     def compute_quotation_price(self):
+        """
+        Calculates the quotation price applying the given rules
+        """
         result = 0.0
         if self.vehiculePrice:
             result = self.vehiculePrice * 2 / 100
@@ -87,6 +117,9 @@ class Quotation(models.Model):
         return result
 
     def generate_pdf(self):
+        """
+        TODO generate the content a the quotation pdf
+        """
         x = 100
         y = 100
         buffer = BytesIO()
@@ -99,6 +132,10 @@ class Quotation(models.Model):
         return pdf
 
     def send_email(self):
+        """
+        Generate an email with the quotation pdf attached
+        Has to be configured in settings.py
+        """
         EmailMsg = EmailMessage("Your quotation", "Please fin attached the quotation you requested", 'no-reply@email.com', [
             self.customer.email], headers={'Reply-To': 'no-reply@email.com'})
         pdf = self.generate_pdf()
