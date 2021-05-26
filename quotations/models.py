@@ -33,7 +33,7 @@ class Coverage(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
-        return f'{self.name} : {self.description}  - actual price : RM  {str(self.price)}'
+        return f'{self.name} : {self.description} - actual price : RM {str(self.price)}'
 
 
 def get_coverage_price_by_name(covname):

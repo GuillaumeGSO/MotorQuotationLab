@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.test import TestCase
-import sqlite3
+from django.db.utils import IntegrityError
 from decimal import Decimal
 
 
@@ -14,7 +14,7 @@ class CustomerModelTests(TestCase):
 
     def setUp(self):
         self.mod = models.Customer.objects.create(
-            username="test", email="email@email.com", phone="0102030405")
+            username="email@email.com", last_name="test", phone="0102030405")
 
     def test_written_in_db(self):
         self.assertEquals(models.Customer.objects.count(), 1)
@@ -33,12 +33,12 @@ class CustomerModelTests(TestCase):
 class CoverageModelTests(TestCase):
 
     def setUp(self):
-        self.mod = models.Coverage.objects.create(
-            description="coverage description", price=154.89)
+        self.mod = models.Coverage.objects.create(name="TEST",
+                                                  description="coverage description", price=154.89)
 
     def test_str_for_coverage(self):
         self.assertEquals(
-            str(self.mod), "coverage description - actual price : RM 154.89")
+            str(self.mod), "TEST : coverage description - actual price : RM 154.89")
 
 
 class QuotationModelTests(TestCase):
@@ -50,22 +50,19 @@ class QuotationModelTests(TestCase):
             customer=self.cust, vehiculeModel="MODEL", quotationPrice=234.989)
 
     def test_missing_customer_constraint(self):
-        """
-        Can't make this work !
-        """
         newObj = models.Quotation()
-        with self.assertRaises(sqlite3.IntegrityError):
+        with self.assertRaises(IntegrityError):
             newObj.save()
 
     def test_str_for_quotation(self):
         now = datetime.now()
         nowstr = now.strftime("%-d/%-m/%Y")  # with no zero-padded
+        print(nowstr)
         self.assertEquals(str(self.mod), nowstr +
                           " - email@email.com - MODEL - 234.989")
 
     def test_has_timeStamp(self):
         self.assertIsInstance(self.mod.created, datetime)
-        self.assertIsInstance(self.mod.modified, datetime)
 
     def test_short_date_month_with_zero(self):
         date_time_obj = datetime.strptime("28/02/2020", '%d/%m/%Y')
@@ -79,14 +76,13 @@ class QuotationModelTests(TestCase):
 
     def test_save_and_calculate_no_id(self):
         """
-        Hard to make this work, is the method well written ?
+        Can't make this work !
+        is the method well written ?
         """
         newObj = models.Quotation()
         # Customer is mandatory
         newObj.customer = models.Customer.objects.create(
             username="user", id=999)
-        self.assertIsNone(newObj.id)
-        # self.assertIsNone(newObj.coverages)
         newObj.calculate_and_save()
         self.assertIsNotNone(newObj.id)
 
@@ -106,53 +102,65 @@ class QuotationModelTests(TestCase):
         # Then
         self.assertEquals(price, 2)
 
-    def test_compute_price_no_price_1_coverage(self):
+    def test_compute_price_no_price_WIND_coverage(self):
         """
         Can't make this work !
         """
         # Given
         self.mod.vehiculePrice = Decimal('0')
-        cov100 = models.Coverage.objects.create(
-            description="cov100", price=Decimal('100'))
-        self.mod.coverages.add(cov100)
+        models.Coverage.objects.create(name="WIND",
+                                       description="cov500", price=Decimal('500'))
+        self.mod.covWind = True
         # When
         price = self.mod.compute_quotation_price()
         # Then
-        self.assertEquals(price, 100)
+        self.assertEquals(price, 500)
 
-    def test_compute_price_no_price_n_coverages(self):
+    def test_compute_price_no_price_PASS_coverages(self):
         """
         Can't make this work !
         """
         # Given
         self.mod.vehiculePrice = 0
-        for i in range(100):
-            cov = models.Coverage.objects.create(
-                description = "cov" + str(i), price = 10)
-            self.mod.coverages.add(cov)
+        models.Coverage.objects.create(name="PASS",
+                                       description="cov100", price=Decimal('100'))
+        self.mod.covPass = True
         # When
         price = self.mod.compute_quotation_price()
         # Then
-        self.assertEquals(price, 1000)
+        self.assertEquals(price, 100)
 
-    def test_compute_price_a_price_3_coverages(self):
+    def test_compute_price_no_price_FLOOD_coverages(self):
         """
         Can't make this work !
         """
         # Given
-        self.mod.vehiculePrice = 1000
-        cov100 = models.Coverage.objects.create(
-            description="cov100", price=float(100.10))
-        cov500 = models.Coverage.objects.create(
-            description="cov500", price=500.20)
-        cov0 = models.Coverage.objects.create(
-            description="cov0", price=0.0)
-
-        self.mod.coverages.add(cov100)
-        self.mod.coverages.add(cov500)
-        self.mod.coverages.add(cov0)
+        self.mod.vehiculePrice = 0
+        models.Coverage.objects.create(name="FLOOD",
+                                       description="cov0", price=Decimal('0'))
+        self.mod.covFlood = True
         # When
         price = self.mod.compute_quotation_price()
         # Then
-        # Price = 1000*2% + 500.1 + 100.2 + 0
-        self.assertEquals(price, 620.3)
+        self.assertEquals(price, 0)
+    
+    def test_compute_price_a_price_all_coverage(self):
+        """
+        Can't make this work !
+        """
+        # Given
+        self.mod.vehiculePrice = 50_000
+        models.Coverage.objects.create(name="WIND",
+                                       description="cov500", price=Decimal('500'))
+        self.mod.covWind = True
+        models.Coverage.objects.create(name="PASS",
+                                       description="cov100", price=Decimal('100'))
+        self.mod.covPass = True
+        models.Coverage.objects.create(name="FLOOD",
+                                       description="cov0", price=Decimal('0'))
+        self.mod.covFlood = True
+        # When
+        price = self.mod.compute_quotation_price()
+        # Then
+        # Price = 1000*2% + 500 + 100 + 0
+        self.assertEquals(price, 1800)
