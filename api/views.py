@@ -36,7 +36,7 @@ class QuotationCreate(generics.CreateAPIView, mixins.CreateModelMixin):
             quotation.quotationPrice = quotation.compute_quotation_price()
             quotation.save()
             return Response(self.get_serializer(quotation).data, status=status.HTTP_201_CREATED)
-        return Response(self.serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         cust = self.get_by_email_or_create()
