@@ -1,3 +1,4 @@
+from rest_framework.fields import SerializerMethodField
 from rest_framework import serializers
 from api.models import Coverage, Quotation, Customer
 
@@ -16,12 +17,16 @@ class CustomerSerializer(serializers.ModelSerializer):
 class QuotationSerializer(serializers.ModelSerializer):
 
     customer = serializers.PrimaryKeyRelatedField(read_only=True)
+    #quotationPrice = SerializerMethodField
     
+    def get_quotationPrice():
+        pass
+
     class Meta:
         model = Quotation
         #'name', 'email', 'phone'
-        fields = ['customer','vehiculeYearMake', 'vehiculeModel',
-                  'vehiculeNumber', 'vehiculePrice',
+        fields = ['customer','id','vehiculeYearMake', 'vehiculeModel',
+                  'vehiculeNumber', 'vehiculePrice','quotationPrice',
                   'covWind', 'covPass', 'covFlood']
-        read_only_fields = ['quotationPrice']
+        #read_only_fields = ['quotationPrice']
     

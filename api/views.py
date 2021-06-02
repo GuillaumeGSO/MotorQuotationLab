@@ -33,7 +33,7 @@ class QuotationCreate(generics.CreateAPIView, mixins.CreateModelMixin):
         if serializer.is_valid():
             self.perform_create(serializer)
             quotation  = Quotation.objects.get(pk=serializer.instance.id)
-            quotation.price = quotation.compute_quotation_price()
+            quotation.quotationPrice = quotation.compute_quotation_price()
             quotation.save()
             return Response(self.get_serializer(quotation).data, status=status.HTTP_201_CREATED)
         return Response(self.serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
