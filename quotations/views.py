@@ -2,7 +2,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib.auth import login
 from django.views.generic import ListView, DetailView, CreateView
-from . import models
+from api import models
 from . import forms
 
 
@@ -51,7 +51,7 @@ class QuotationCreateView(CreateView):
     """
 
     template_name = 'quotations/create.html'
-    createform = forms.QuotationForm()
+    #createform = forms.QuotationForm()
 
     def post(self, request):
         self.createform = forms.QuotationForm(request.POST)
