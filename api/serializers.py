@@ -14,7 +14,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ('username', 'last_name', 'phone')
+        fields = ['username', 'last_name', 'email', 'phone']
 
 
 class QuotationSerializer(serializers.ModelSerializer):
@@ -23,8 +23,7 @@ class QuotationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quotation
-        
+
         fields = ['customer', 'id', 'vehiculeYearMake', 'vehiculeModel',
                   'vehiculeNumber', 'vehiculePrice', 'quotationPrice',
                   'covWind', 'covPass', 'covFlood']
-       

@@ -1,13 +1,17 @@
 from api import serializers
-from api.models import Customer, Quotation
+from api.models import Coverage, Customer, Quotation
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
-from rest_framework import mixins
 
 # Views utilized by Api
+
+
+class CoverageView(generics.ListAPIView):
+    queryset = Coverage.objects.all()
+    serializer_class = serializers.CoverageSerializer
 
 
 class QuotationList(generics.ListCreateAPIView):
@@ -43,6 +47,7 @@ class QuotationList(generics.ListCreateAPIView):
         cust = Customer.objects.create(
             username=mail,
             last_name=self.request.data['name'],
+            email=mail,
             phone=self.request.data['phone']
         )
         cust.set_password('Tigerlab@2021')
