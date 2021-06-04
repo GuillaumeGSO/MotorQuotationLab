@@ -9,9 +9,11 @@ from rest_framework import mixins
 
 # Views utilized by Api
 
+
 class QuotationList(generics.ListCreateAPIView):
     queryset = Quotation.objects.all()
     serializer_class = serializers.QuotationSerializer
+
 
 class QuotationDetail(APIView):
     def get_object(self, pk):
@@ -24,15 +26,16 @@ class QuotationDetail(APIView):
         quotation = self.get_object(id)
         serializer = serializers.QuotationSerializer(quotation)
         return Response(serializer.data)
-    
-class QuotationCreate(generics.CreateAPIView, mixins.CreateModelMixin):
+
+
+class QuotationCreate(generics.CreateAPIView):
     serializer_class = serializers.QuotationSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             self.perform_create(serializer)
-            quotation  = Quotation.objects.get(pk=serializer.instance.id)
+            quotation = Quotation.objects.get(pk=serializer.instance.id)
             quotation.quotationPrice = quotation.compute_quotation_price()
             quotation.save()
             return Response(self.get_serializer(quotation).data, status=status.HTTP_201_CREATED)
@@ -40,8 +43,8 @@ class QuotationCreate(generics.CreateAPIView, mixins.CreateModelMixin):
 
     def perform_create(self, serializer):
         cust = self.get_by_email_or_create()
-        serializer.save(customer = cust)
-    
+        serializer.save(customer=cust)
+
     def get_by_email_or_create(self):
         """
         Retrieve the `:model:`Customer with the email inputed or create a new one
