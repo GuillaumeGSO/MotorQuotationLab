@@ -10,11 +10,29 @@ from rest_framework import generics
 
 
 class CoverageView(generics.ListAPIView):
+    """
+    Return all the :model:Coverage from the database
+    GET only
+    """
     queryset = Coverage.objects.all()
     serializer_class = serializers.CoverageSerializer
 
 
+class QuotationDetail(generics.RetrieveAPIView):
+    """
+    Return a :model:Quotation with details by its id
+    """
+    serializer_class = serializers.QuotationSerializer
+    queryset = Quotation.objects.all()
+    lookup_field = 'id'
+
+
 class QuotationList(generics.ListCreateAPIView):
+    """
+    Get : list of all the :model:Quotation
+    Post : create a new :model:Quotation with :model:Customer creation if not yet in the :model:User base.
+    The email adress is used for Customer creation
+    """
     queryset = Quotation.objects.all()
     serializer_class = serializers.QuotationSerializer
 
@@ -56,14 +74,4 @@ class QuotationList(generics.ListCreateAPIView):
         return cust
 
 
-class QuotationDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Quotation.objects.get(pk=pk)
-        except Quotation.DoesNotExist:
-            raise Http404
 
-    def get(self, request, id, format=None):
-        quotation = self.get_object(id)
-        serializer = serializers.QuotationSerializer(quotation)
-        return Response(serializer.data)
