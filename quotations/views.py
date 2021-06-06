@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from django.contrib.auth import login
 from django.http.response import HttpResponseRedirect
 import requests
 from django.shortcuts import render
@@ -18,11 +20,16 @@ class QuotationListView(ListView):
     template_name = 'quotations/quotation_list.html'
 
     def get(self, request):
-        response = requests.get(settings.QUOTATION_API_BASE_URL)
+        headers = {}
+        if request.user.is_authenticated:
+            headers = {'Authorization': 'Token ' +
+                       str(request.user.auth_token)}
+        jsonResponse = requests.get(
+            settings.QUOTATION_API_BASE_URL, headers=headers).json()
 
         return render(request, self.template_name,
-                      {'quotations': response.json(),
-                       'userConnected': request.user.username})
+                      {'quotations': jsonResponse,
+                       'userConnected': request.user})
 
 
 class QuotationDetailView(DetailView):
@@ -35,12 +42,13 @@ class QuotationDetailView(DetailView):
 
     def get(self, request, id):
         """
-        get metod to retrieve the quotation
+        get method to retrieve the quotation
         """
         response = requests.get(settings.QUOTATION_API_BASE_URL + str(id))
 
         return render(request, self.template_name,
-                      {'quotation': response.json()})
+                      {'quotation': response.json(),
+                       'userConnected': request.user})
 
 
 class DecimalEncoder(json.JSONEncoder):
@@ -80,12 +88,20 @@ class QuotationCreateView(CreateView):
             response = requests.post(settings.QUOTATION_API_BASE_URL + 'create/',
                                      data=json.dumps(req, cls=DecimalEncoder),
                                      headers={'Content-type': 'Application/json'})
-            return HttpResponseRedirect('/quotation/' + str(response.json()['id']))
-        else:
-            return render(request, self.template_name, {'form': self.createform})
+            if response.status_code == 201:
+                reponseJson = response.json()
+                quotationCreatedId = reponseJson['id']
+                userFromJson = reponseJson['customer']
+                user = User.objects.filter(username=userFromJson['username'])
+                login(self.request, user.first())
+                return HttpResponseRedirect('/quotation/' +
+                                            str(quotationCreatedId))
+
+        return render(request, self.template_name, {'form': self.createform})
 
     def get(self, request):
         """
         Initialize the form for `:model:`Quotation creation via API
         """
-        return render(request, self.template_name, {'form': self.createform})
+        return render(request, self.template_name, {'form': self.createform,
+                                                    'userConnected': request.user})

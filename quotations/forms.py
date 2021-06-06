@@ -6,7 +6,7 @@ from django.template.defaultfilters import default
 class QuotationForm(forms.Form):
     """
     Form for Quotation create API Call
-    View : `:view:`QuotationCreateView
+    View : :view:`QuotationCreateView`
     """
 
     name = forms.CharField(max_length=30)
