@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',
     'django.contrib.admindocs',
     'crispy_forms',
     'quotations.apps.QuotationsConfig',
     'register.apps.RegisterConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +147,5 @@ LOGIN_REDIRECT_URL = "/"
 # go to home after logout
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/login"
+
+QUOTATION_API_BASE_URL = "http://localhost:8000/api/"

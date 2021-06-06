@@ -1,4 +1,4 @@
-from quotations.models import Customer
+from api.models import Customer
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 

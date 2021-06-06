@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from quotations.admin import quotAdmin
+from api.admin import quotAdmin
 from register import views as rviews
 
 urlpatterns = [
@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('quotations-admin/', quotAdmin.urls),
     path('register/', rviews.register),
-    path('', include('quotations.urls')),
+    path('api/', include('api.urls')),
+    path('quotation/', include('quotations.urls')),
     path('', include('django.contrib.auth.urls')),
 ]

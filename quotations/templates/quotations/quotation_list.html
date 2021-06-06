@@ -21,8 +21,8 @@
     </thead>
     <tbody>
 
-        {% for q in quotations.all %}
-        <tr class="clickable" onclick="window.location='quotation/{{q.id}}'">
+        {% for q in quotations %}
+        <tr class="clickable" onclick="window.location='{{q.id}}'">
             <td>{{q.short_creation_date}}</td>
             <td>{{q.vehiculeYearMake}}</td>
             <td>{{q.vehiculeModel}}</td>
