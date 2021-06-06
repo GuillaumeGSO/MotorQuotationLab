@@ -6,7 +6,10 @@ from django.utils.translation import ngettext
 from . import models
 
 # Models in the regular admin
-admin.site.register([models.Coverage, models.Customer, models.Quotation])
+#FIXME "Customer" is currently displayed as "User" in Admin
+myModels = [models.Coverage, models.Customer, models.Quotation]
+myLibs = ['Coverage', 'Customer', 'Quotation']
+admin.site.register(myModels)
 
 
 class QuotationAdminSite(AdminSite):
@@ -21,8 +24,8 @@ quotAdmin = QuotationAdminSite(name='quotAdmin')
 
 
 class QuotationModelAdmin(admin.ModelAdmin):
-    list_display = ('customer', 'vehiculeModel',
-                    'vehiculePrice', 'quotationPrice', 'created')
+    list_display = ['customer', 'vehiculeModel',
+                    'vehiculePrice', 'quotationPrice', 'created']
     ordering = ['created']
     search_fields = ['vehiculeModel']
     actions = ['send_emails', 'refresh_quotation_price']

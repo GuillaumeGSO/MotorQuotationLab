@@ -26,4 +26,4 @@ class QuotationSerializer(serializers.ModelSerializer):
 
         fields = ['customer', 'id', 'vehiculeYearMake', 'vehiculeModel',
                   'vehiculeNumber', 'vehiculePrice', 'quotationPrice',
-                  'covWind', 'covPass', 'covFlood']
+                  'covWind', 'covPass', 'covFlood', 'short_creation_date']

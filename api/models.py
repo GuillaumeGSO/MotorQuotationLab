@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class Customer (authModel.User):
     """
-    Extends django Customer object to be able to store the phone number
+    Extends django User object to be able to store the phone number
     Related to :model:`auth.user`
     """
 
@@ -84,8 +84,9 @@ class Quotation(models.Model):
         """
         Mainly used for quotation-admin and clean display 
         """
-        return f'{self.short_creation_date()} - {self.customer.email} - {self.vehiculeModel} - {self.quotationPrice}'
+        return f'{self.short_creation_date()} - {self.customer.username} - {self.vehiculeModel} - {self.quotationPrice}'
 
+    @property
     def short_creation_date(self):
         """
         Shorten the timestamp

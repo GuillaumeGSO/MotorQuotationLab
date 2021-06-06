@@ -11,7 +11,7 @@ from rest_framework import generics
 
 class CoverageView(generics.ListAPIView):
     """
-    Return all the :model:Coverage from the database
+    Return all the :model:`coverage` from the database
     GET only
     """
     queryset = Coverage.objects.all()
@@ -20,7 +20,7 @@ class CoverageView(generics.ListAPIView):
 
 class QuotationDetail(generics.RetrieveAPIView):
     """
-    Return a :model:Quotation with details by its id
+    Return a :model:`quotation` with details by its id
     """
     serializer_class = serializers.QuotationSerializer
     queryset = Quotation.objects.all()
@@ -29,8 +29,8 @@ class QuotationDetail(generics.RetrieveAPIView):
 
 class QuotationList(generics.ListCreateAPIView):
     """
-    Get : list of all the :model:Quotation
-    Post : create a new :model:Quotation with :model:Customer creation if not yet in the :model:User base.
+    Get : list of all the :model:`quotation`
+    Post : create a new :model:`quotation` with :model:`customer` creation if not yet in the :model:`auth.user` base.
     The email adress is used for Customer creation
     """
     queryset = Quotation.objects.all()
@@ -53,7 +53,7 @@ class QuotationList(generics.ListCreateAPIView):
 
     def get_by_email_or_create(self):
         """
-        Retrieve the `:model:`Customer with the email inputed or create a new one
+        Retrieve the :model:`customer` with the email inputed or create a new one
         """
         mail = self.request.data['email']
         cust = Customer.objects.filter(username__icontains=mail)

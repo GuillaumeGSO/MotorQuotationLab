@@ -147,3 +147,5 @@ LOGIN_REDIRECT_URL = "/"
 # go to home after logout
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/login"
+
+QUOTATION_API_BASE_URL = "http://localhost:8000/api/"
