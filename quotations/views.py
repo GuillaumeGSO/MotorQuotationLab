@@ -1,12 +1,13 @@
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect
 import requests
 from django.shortcuts import render
 from django.contrib.auth import login
 from django.views.generic import ListView, DetailView, CreateView
 import requests
-from api import models
 from . import forms
 from django.conf import settings
+import json
+import decimal
 
 
 class QuotationListView(ListView):
@@ -38,8 +39,16 @@ class QuotationDetailView(DetailView):
         get metod to retrieve the quotation
         """
         response = requests.get(settings.QUOTATION_API_BASE_URL + str(id))
-    
-        return render(request, self.template_name, {'quotation': response.json()})
+
+        return render(request, self.template_name,
+                      {'quotation': response.json()})
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            return float(o)
+        super(DecimalEncoder, self).default(o)
 
 
 class QuotationCreateView(CreateView):
@@ -48,54 +57,36 @@ class QuotationCreateView(CreateView):
     Automtically generate the email
     TODO do this in the detail view
     """
-
     template_name = 'quotations/create.html'
-    #createform = forms.QuotationForm()
+    createform = forms.QuotationForm
 
     def post(self, request):
+        """
+        Validate and send a post request to the API
+        """
         self.createform = forms.QuotationForm(request.POST)
         if self.createform.is_valid():
-            cust = self.get_by_email_or_create(
-                request)
-            t = models.Quotation(
-                customer=cust,
-                vehiculeModel=self.createform.cleaned_data['vehiculeModel'],
-                vehiculeYearMake=self.createform.cleaned_data['vehiculeYearMake'],
-                vehiculeNumber=self.createform.cleaned_data['vehiculeNumber'],
-                vehiculePrice=self.createform.cleaned_data['vehiculePrice'],
-                covWind=self.createform.cleaned_data['covWind'],
-                covPass=self.createform.cleaned_data['covPass'],
-                covFlood=self.createform.cleaned_data['covFlood'],
-            )
-            t.calculate_and_save()
-            t.send_email()
+            req = {
+                "name": self.createform.cleaned_data['name'],
+                "email": self.createform.cleaned_data['email'],
+                "phone": self.createform.cleaned_data['phone'],
+                "vehiculeModel": self.createform.cleaned_data['vehiculeModel'],
+                "vehiculeYearMake": self.createform.cleaned_data['vehiculeYearMake'],
+                "vehiculeNumber":  self.createform.cleaned_data['vehiculeNumber'],
+                "vehiculePrice": self.createform.cleaned_data['vehiculePrice'],
+                "covWind": self.createform.cleaned_data['covWind'],
+                "covPass": self.createform.cleaned_data['covPass'],
+                "covFlood": self.createform.cleaned_data['covFlood']
+            }
+            response = requests.post(settings.QUOTATION_API_BASE_URL + 'create/',
+                                     data=json.dumps(req, cls=DecimalEncoder),
+                                     headers={'Content-type': 'Application/json'})
+            return HttpResponseRedirect('/quotation/' + str(response.json()['id']))
         else:
             return render(request, self.template_name, {'form': self.createform})
-        return HttpResponseRedirect('/quotation/' + str(t.id))
-
-    def get_by_email_or_create(self, request):
-        """
-        Retrieve the `:model:`Customer with the email inputed or create a new one
-        """
-        mail = self.createform.cleaned_data['email']
-        cust = models.Customer.objects.filter(username__icontains=mail)
-        if cust:
-            login(request, cust.first())
-            return cust.first()
-
-        # No user ? create one
-        cust = models.Customer.objects.create(
-            username=mail,
-            last_name=self.createform.cleaned_data['name'],
-            phone=self.createform.cleaned_data['phone']
-        )
-        cust.set_password('Tigerlab@2021')
-        cust.save()
-        login(request, cust)
-        return cust
 
     def get(self, request):
         """
-        Initialize the form for `:model:`Quotation creation
+        Initialize the form for `:model:`Quotation creation via API
         """
         return render(request, self.template_name, {'form': self.createform})

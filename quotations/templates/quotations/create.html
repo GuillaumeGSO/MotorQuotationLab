@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="form-group">
-    <form method="POST" action="/create/" >
+    <form method="POST" >
         {% csrf_token %}
         {{form|crispy}}
         <button type="submit" class="btn btn-secondary" name="create">Create</button>

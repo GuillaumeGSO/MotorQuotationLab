@@ -6,7 +6,7 @@ app_name = 'Quotations'
 
 urlpatterns = [
     path('', views.QuotationListView.as_view(), name='quotations'),
-    path('quotation/<int:id>', views.QuotationDetailView.as_view(),
+    path('<int:id>', views.QuotationDetailView.as_view(),
          name='quotation_detail'),
-    #path('create/', views.QuotationCreateView.as_view(), name='create'),
+    path('create/', views.QuotationCreateView.as_view(), name='create'),
 ]
