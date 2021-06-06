@@ -103,5 +103,9 @@ class QuotationCreateView(CreateView):
         """
         Initialize the form for `:model:`Quotation creation via API
         """
+        if not request.user.is_anonymous and request.user.customer:
+            self.createform.base_fields['name'].initial = request.user.customer.last_name
+            self.createform.base_fields['email'].initial = request.user.customer.username
+            self.createform.base_fields['phone'].initial = request.user.customer.phone
         return render(request, self.template_name, {'form': self.createform,
                                                     'userConnected': request.user})
