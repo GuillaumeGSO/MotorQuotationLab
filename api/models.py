@@ -84,7 +84,7 @@ class Quotation(models.Model):
         """
         Mainly used for quotation-admin and clean display 
         """
-        return f'{self.short_creation_date()} - {self.customer.username} - {self.vehiculeModel} - {self.quotationPrice}'
+        return f'{self.short_creation_date} - {self.customer.username} - {self.vehiculeModel} - {self.quotationPrice}'
 
     @property
     def short_creation_date(self):

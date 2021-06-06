@@ -1,9 +1,7 @@
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponseRedirect
 import requests
 from django.shortcuts import render
-from django.contrib.auth import login
 from django.views.generic import ListView, DetailView, CreateView
-import requests
 from . import forms
 from django.conf import settings
 import json
@@ -22,8 +20,9 @@ class QuotationListView(ListView):
     def get(self, request):
         response = requests.get(settings.QUOTATION_API_BASE_URL)
 
-        return render(request, self.template_name, {'quotations': response.json(),
-                                                    'userConnected': request.user.username})
+        return render(request, self.template_name,
+                      {'quotations': response.json(),
+                       'userConnected': request.user.username})
 
 
 class QuotationDetailView(DetailView):
