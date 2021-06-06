@@ -1,13 +1,13 @@
 from django.db import models
-from django.contrib.auth import login, models as authModel
+from django.contrib.auth import models as authModel
 from django.core.validators import MinValueValidator
-from django.db.models.expressions import Exists
 from django.template.defaultfilters import date
 from io import BytesIO
 from reportlab.pdfgen import canvas
 from django.core.mail import EmailMessage
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
+import decimal
 
 
 class Customer (authModel.User):
@@ -20,7 +20,7 @@ class Customer (authModel.User):
 
     def __str__(self):
         return self.last_name + ' (' + self.username + ')'
-    
+
 
 class Coverage(models.Model):
     """
@@ -43,7 +43,7 @@ def get_coverage_price_by_name(covname):
     try:
         obj = Coverage.objects.get(name=covname)
     except ObjectDoesNotExist:
-        return 0
+        return decimal.Decimal('0')
     return obj.price
 
 
@@ -85,6 +85,7 @@ class Quotation(models.Model):
         Mainly used for quotation-admin and clean display 
         """
         return f'{self.short_creation_date} - {self.customer.username} - {self.vehiculeModel} - {self.quotationPrice}'
+        
 
     @property
     def short_creation_date(self):
@@ -105,7 +106,7 @@ class Quotation(models.Model):
         """
         Calculates the quotation price applying the given rules
         """
-        result = 0.0
+        result = decimal.Decimal('0')
         if self.vehiculePrice:
             result = self.vehiculePrice * 2 / 100
         if self.covWind:

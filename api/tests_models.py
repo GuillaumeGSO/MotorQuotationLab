@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.test import TestCase
 from django.db.utils import IntegrityError
-from decimal import Decimal
+import decimal
 
 
 from . import models
@@ -56,10 +56,15 @@ class QuotationModelTests(TestCase):
 
     def test_str_for_quotation(self):
         now = datetime.now()
-        nowstr = now.strftime("%-d/%-m/%Y")  # with no zero-padded
-        print(nowstr)
+        try:
+            #OSX or Unix
+            nowstr = now.strftime('%-d/%-m/%Y')  # with no zero-padded
+        except ValueError:
+            # Windows
+            nowstr = now.strftime('%#d/%#m/%Y')  # with no zero-padded
+            
         self.assertEquals(str(self.mod), nowstr +
-                          " - email@email.com - MODEL - 234.989")
+                          " - test - MODEL - 234.989")
 
     def test_has_timeStamp(self):
         self.assertIsInstance(self.mod.created, datetime)
@@ -67,18 +72,14 @@ class QuotationModelTests(TestCase):
     def test_short_date_month_with_zero(self):
         date_time_obj = datetime.strptime("28/02/2020", '%d/%m/%Y')
         self.mod.created = date_time_obj
-        self.assertEquals(self.mod.short_creation_date(), "28/2/2020")
+        self.assertEquals(self.mod.short_creation_date, "28/2/2020")
 
     def test_short_date_day_with_zero(self):
         date_time_obj = datetime.strptime("07/10/2020", '%d/%m/%Y')
         self.mod.created = date_time_obj
-        self.assertEquals(self.mod.short_creation_date(), "7/10/2020")
+        self.assertEquals(self.mod.short_creation_date, "7/10/2020")
 
     def test_save_and_calculate_no_id(self):
-        """
-        Can't make this work !
-        is the method well written ?
-        """
         newObj = models.Quotation()
         # Customer is mandatory
         newObj.customer = models.Customer.objects.create(
@@ -103,13 +104,11 @@ class QuotationModelTests(TestCase):
         self.assertEquals(price, 2)
 
     def test_compute_price_no_price_WIND_coverage(self):
-        """
-        Can't make this work !
-        """
         # Given
-        self.mod.vehiculePrice = Decimal('0')
+        self.mod.vehiculePrice = decimal.Decimal('0')
         models.Coverage.objects.create(name="WIND",
-                                       description="cov500", price=Decimal('500'))
+                                       description="cov500",
+                                       price=decimal.Decimal('500'))
         self.mod.covWind = True
         # When
         price = self.mod.compute_quotation_price()
@@ -117,13 +116,11 @@ class QuotationModelTests(TestCase):
         self.assertEquals(price, 500)
 
     def test_compute_price_no_price_PASS_coverages(self):
-        """
-        Can't make this work !
-        """
         # Given
-        self.mod.vehiculePrice = 0
+        self.mod.vehiculePrice = decimal.Decimal('0')
         models.Coverage.objects.create(name="PASS",
-                                       description="cov100", price=Decimal('100'))
+                                       description="cov100",
+                                       price=decimal.Decimal('100'))
         self.mod.covPass = True
         # When
         price = self.mod.compute_quotation_price()
@@ -131,36 +128,34 @@ class QuotationModelTests(TestCase):
         self.assertEquals(price, 100)
 
     def test_compute_price_no_price_FLOOD_coverages(self):
-        """
-        Can't make this work !
-        """
         # Given
         self.mod.vehiculePrice = 0
         models.Coverage.objects.create(name="FLOOD",
-                                       description="cov0", price=Decimal('0'))
+                                       description="cov0",
+                                       price=decimal.Decimal('0'))
         self.mod.covFlood = True
         # When
         price = self.mod.compute_quotation_price()
         # Then
         self.assertEquals(price, 0)
-    
+
     def test_compute_price_a_price_all_coverage(self):
-        """
-        Can't make this work !
-        """
         # Given
-        self.mod.vehiculePrice = 50_000
+        self.mod.vehiculePrice = decimal.Decimal('100000')
         models.Coverage.objects.create(name="WIND",
-                                       description="cov500", price=Decimal('500'))
+                                       description="cov500",
+                                       price=decimal.Decimal('500'))
         self.mod.covWind = True
         models.Coverage.objects.create(name="PASS",
-                                       description="cov100", price=Decimal('100'))
+                                       description="cov100",
+                                       price=decimal.Decimal('100'))
         self.mod.covPass = True
         models.Coverage.objects.create(name="FLOOD",
-                                       description="cov0", price=Decimal('0'))
+                                       description="cov0",
+                                       price=decimal.Decimal('0'))
         self.mod.covFlood = True
         # When
         price = self.mod.compute_quotation_price()
         # Then
-        # Price = 1000*2% + 500 + 100 + 0
-        self.assertEquals(price, 1800)
+        # Price = 100000*2% + 500 + 100 + 0
+        self.assertEquals(price, 2600)
