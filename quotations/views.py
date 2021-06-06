@@ -16,8 +16,6 @@ class QuotationListView(ListView):
     Click on a row to get the quotation detail
     :template:`quotation/quotation_list.html`
     """
-
-    model = models.Quotation
     template_name = 'quotations/quotation_list.html'
 
     def get(self, request):
@@ -33,17 +31,15 @@ class QuotationDetailView(DetailView):
     TODO email generation from this page
     template name :template:`quotations/quotation.html`
     """
-
-    model = models.Quotation
     template_name = 'quotations/quotation.html'
 
     def get(self, request, id):
         """
         get metod to retrieve the quotation
-        TODO replace by an API call
         """
-        quot = models.Quotation.objects.get(id=id)
-        return render(request, self.template_name, {'quotation': quot})
+        response = requests.get(settings.QUOTATION_API_BASE_URL + str(id))
+    
+        return render(request, self.template_name, {'quotation': response.json()})
 
 
 class QuotationCreateView(CreateView):
