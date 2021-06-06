@@ -16,14 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from api.admin import quotAdmin
-from register import views as rviews
 
 urlpatterns = [
 
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('quotations-admin/', quotAdmin.urls),
-    path('register/', rviews.register),
     path('api/', include('api.urls')),
     path('quotation/', include('quotations.urls')),
     path('', include('django.contrib.auth.urls')),

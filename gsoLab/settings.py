@@ -46,7 +46,6 @@ INSTALLED_APPS = [
 
     # My Apps
     'quotations.apps.QuotationsConfig',
-    'register.apps.RegisterConfig',
     'api.apps.ApiConfig',
 ]
 
@@ -152,10 +151,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Because we're already using it in base.html
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# Go to the main page after login
-LOGIN_REDIRECT_URL = "/"
 # go to home after logout
 LOGOUT_REDIRECT_URL = "/quotation"
-LOGIN_URL = "/login"
 
 QUOTATION_API_BASE_URL = "http://localhost:8000/api/"

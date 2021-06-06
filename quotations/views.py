@@ -21,7 +21,7 @@ class QuotationListView(ListView):
 
     def get(self, request):
         headers = {}
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and request.user.auth_token:
             headers = {'Authorization': 'Token ' +
                        str(request.user.auth_token)}
         jsonResponse = requests.get(
